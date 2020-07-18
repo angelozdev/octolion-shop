@@ -1,5 +1,8 @@
 import app from './app';
 
-app.listen(app.get('port'), () => {
-   console.log(`Server listener at http://localhost:${app.get('port')}`)
+const PORT = process.env.PORT || 3000
+
+app.listen(PORT, () => {
+   console.clear()
+   console.log(`Server listener at http://localhost:${PORT}`)
 })
