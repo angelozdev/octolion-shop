@@ -1,6 +1,8 @@
 import app from './app';
+import { connect } from './db';
 
-const PORT = process.env.PORT || 3000
+connect()
+const PORT = process.env.PORT || 6666
 
 app.listen(PORT, () => {
    console.clear()

@@ -3,7 +3,8 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import { join } from 'path';
 
-import userRoutes from './routes/user.routes';
+import productRoutes from './routes/views/product.routes';
+import productApiRoutes from './routes/api/product.routes'
 
 // Init express
 const app: Application = express();
@@ -16,7 +17,6 @@ dotenv.config()
 
 
 // settings
-console.log(process.env.NODE_ENV)
 
 // Middlewares
 app.use(morgan('dev'))
@@ -33,12 +33,12 @@ app.get('/me', (req: Request, res: Response) => {
       github  : "https://github.com/angelozdev"
    })
 })
-
 app.get('/', (req: Request, res: Response) => {
-   res.render('index', { title: "Hello world with Express" })
+   res.render('index', { title: "Express | Home" })
 })
+app.use('/products', productRoutes);
+app.use('/api/products', productApiRoutes)
 
-app.use('/products', userRoutes)
 
 // Global variables
 
@@ -48,9 +48,14 @@ app.use('/products', userRoutes)
 /**************************************************************************
 *                        Serve front-end contend
 ***************************************************************************/
+// Set views
 app.set('views', join(__dirname, 'views'))
 app.set('view engine', 'pug')
+
+// Static Files
 app.use(express.static(join(__dirname, 'public')))
+
+// 404
 app.get('*', (req: Request, res: Response) => {
    res.sendStatus(404)
 })
