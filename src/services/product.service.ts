@@ -1,7 +1,7 @@
 import Product, { IProduct, IProductDoc } from '../models/Products';
 
 
- export const getProducts = async (): Promise<Array<IProduct>> => {
+ export const getProducts = async (/* query */): Promise<Array<IProduct>> => {
    return await Product.find();
 }
 
@@ -10,7 +10,13 @@ export const getProduct = async ({ id }: { id: string }): Promise<IProduct | nul
 }
 
 export const createProduct = async (product: IProductDoc): Promise<IProduct> => {
-   const newProduct: IProduct = await Product.create(product)
-   return Promise.resolve(newProduct)
+   return await Product.create(product)
 }
 
+export const deleteProduct = async ({ id }: { id: string }): Promise<IProduct | null> => {
+   return await Product.findByIdAndDelete(id)
+}
+
+export const updateProduct = async ({ _id, image, price, name }: IProduct): Promise<IProduct | null> => {
+   return await Product.findByIdAndUpdate(_id, { image, price, name }, { new: true })
+}

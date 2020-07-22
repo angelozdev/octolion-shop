@@ -4,7 +4,9 @@ import dotenv from 'dotenv';
 import { join } from 'path';
 
 import productRoutes from './routes/views/product.routes';
-import productApiRoutes from './routes/api/product.routes'
+import productApiRoutes from './routes/api/product.routes';
+
+import { clientErrorHandler, errorHandler, logErrors } from './utils/middlewares/errorsHandlers'
 
 // Init express
 const app: Application = express();
@@ -39,6 +41,11 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/products', productRoutes);
 app.use('/api/products', productApiRoutes)
 
+
+// Error Handlers
+app.use(logErrors)
+app.use(clientErrorHandler)
+app.use(errorHandler)
 
 // Global variables
 

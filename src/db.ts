@@ -11,10 +11,10 @@ const {
 
 const MONGODB_URI: string = `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@typescript-node.ac5xx.mongodb.net/${MONGODB_DATABASE}?retryWrites=true&w=majority`
 export const connect = () => {
-   console.log(MONGODB_URI)
    mongoose.connect(MONGODB_URI, {
       useUnifiedTopology: true,
-      useNewUrlParser: true
+      useNewUrlParser: true,
+      useFindAndModify: true
    })
    .then(() => console.log('[DB] Connected'))
    .catch(err => {
