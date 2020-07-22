@@ -1,5 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { IProduct, IProductDoc } from '../../models/Products';
+import { createProductSchema, updateProductSchema, productIdSchema } from '../../utils/schemas/product';
+import { validate, reqCheck } from '../../utils/middlewares/validationHandlers';
 import {
    createProduct,
    getProduct,
@@ -7,10 +9,11 @@ import {
    deleteProduct,
    updateProduct
 } from '../../services/product.service';
-import { Error } from 'mongoose';
 
 const router: Router = Router();
 
+
+/* Get all products */
 router.get('/', async (req: Request, res: Response, next: NextFunction): Promise<void> => {
    try {
       /* throw new Error('This is an error') */
@@ -25,6 +28,8 @@ router.get('/', async (req: Request, res: Response, next: NextFunction): Promise
    }
 })
 
+
+/* Get only one product */
 router.get('/:id', async (req: Request, res: Response, next: NextFunction): Promise<void> => {
    try {
       const product: IProduct | null = await getProduct({ id: req.params.id });
@@ -43,10 +48,10 @@ router.get('/:id', async (req: Request, res: Response, next: NextFunction): Prom
 })
 
 
-router.post('/', async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+/* Create Product */
+router.post('/', validate(createProductSchema, reqCheck["body"]), async (req: Request, res: Response, next: NextFunction): Promise<void> => {
    const { name, price, image } = req.body;
    try {
-      if(!name || !price || !image ) throw new Error('Data is incomplete');
       const newProduct: IProduct = {
          name,
          price,
@@ -63,10 +68,10 @@ router.post('/', async (req: Request, res: Response, next: NextFunction): Promis
    }
 })
 
-router.put('/:id', async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-   try {
-      if(!req.params.id) throw new Error('ID is missing')
 
+/* Update a product */
+router.put('/:id', validate(productIdSchema, reqCheck["params"]), validate(updateProductSchema), async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+   try {
       const { name, price, image } = req.body;
 
       const updatedProduct = await updateProduct({ _id: req.params.id, name, price, image })
@@ -80,6 +85,8 @@ router.put('/:id', async (req: Request, res: Response, next: NextFunction): Prom
    }
 })
 
+
+/* Delete a product */
 router.delete('/:id', async (req: Request, res: Response, next: NextFunction): Promise<void> => {
    try {
       if(!req.params.id) throw new Error('ID is missing')
