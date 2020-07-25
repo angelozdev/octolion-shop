@@ -44,16 +44,20 @@ router.post('/', validate(createUserSchema), async (req: Request, res: Response,
 
 
 /* Login */
-router.post('/login', validate(loginSchema), passport.authenticate("login", {
+router.post('/token', validate(loginSchema), passport.authenticate("login", {
       failureRedirect: '/',
       session: false
-   }), (req, res, next) => {
+   }),
+   (req, res, next) => {
       if(!req.user) return next(new Error('User not found'))
-      const payload = req.user;
+      const { _id } = req.user as IUser;
 
-      const token = jwt.sign({user: payload}, process.env.SECRET_JWT || '')
-      res.json({ token: token })
-   })
+      const token = jwt.sign({ id: _id }, process.env.SECRET_JWT || '', {
+         expiresIn: '15m'
+      })
+      res.status(200).json({ token: token })
+   }
+)
 
 
 
