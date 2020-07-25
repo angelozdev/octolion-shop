@@ -1,14 +1,16 @@
 import { Router, NextFunction, Request, Response } from 'express';
 import { createUser, getUsers } from '../../services/user.service';
-import User, { IUser } from '../../models/User';
+import { IUser } from '../../models/User';
 
 import { hash } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import { validate } from '../../utils/middlewares/validationHandlers';
-import { createUserSchema, loginSchema } from '../../utils/schemas/user';
+import { createUserSchema } from '../../utils/schemas/user';
 import passport from 'passport';
-import '../../utils/auth/passport';
+
+/* Strategies */
+import '../../utils/auth/login';
 
 const router: Router = Router();
 
@@ -44,15 +46,17 @@ router.post('/', validate(createUserSchema), async (req: Request, res: Response,
 
 
 /* Login */
-router.post('/token', /* validate(loginSchema), */ passport.authenticate("login", {
+router.post(
+   '/token',
+   passport.authenticate("login", {
       failureRedirect: '/',
       session: false
    }),
    (req, res, next) => {
       if(!req.user) return next(new Error('User not found'))
-      const { _id } = req.user as IUser;
+      const { username } = req.user as IUser;
 
-      const token = jwt.sign({ id: _id }, process.env.SECRET_JWT || '', {
+      const token = jwt.sign({ username }, process.env.SECRET_JWT || '', {
          expiresIn: '15m'
       })
       res.status(200).json({ token: token })

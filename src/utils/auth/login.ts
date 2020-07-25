@@ -1,14 +1,10 @@
 import passport from 'passport';
-/* import passportLocal from 'passport-local'; */
-import passportHttp from 'passport-http';
+import { BasicStrategy } from 'passport-http';
 import { findUserByUsername } from '../../services/user.service';
 import { compare } from 'bcryptjs';
 
-const Strategy = passportHttp.BasicStrategy;
 
-passport.use("login", new Strategy({
-   passReqToCallback: true
-}, async (req, username, password, done) => {
+passport.use("login", new BasicStrategy( async (username, password, done) => {
       try {
          const user = await findUserByUsername({ username })
          if(!user) return done(null, false)

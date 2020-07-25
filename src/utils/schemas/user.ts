@@ -13,7 +13,7 @@ export const createUserSchema = object().shape({
       .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$/)
 })
 
-export const loginSchema = object().shape({
+/* export const loginSchema = object().shape({
    username: string()
       .required()
       .min(3)
@@ -24,4 +24,4 @@ export const loginSchema = object().shape({
       .min(5)
       .max(30)
       .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$/)
-})
+}) */
