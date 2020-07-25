@@ -44,7 +44,7 @@ router.post('/', validate(createUserSchema), async (req: Request, res: Response,
 
 
 /* Login */
-router.post('/token', validate(loginSchema), passport.authenticate("login", {
+router.post('/token', /* validate(loginSchema), */ passport.authenticate("login", {
       failureRedirect: '/',
       session: false
    }),
