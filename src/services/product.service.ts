@@ -1,4 +1,4 @@
-import Product, { IProduct, IProductDoc } from '../models/Products';
+import Product, { IProduct } from '../models/Products';
 
 
  export const getProducts = async (/* query */): Promise<Array<IProduct>> => {
@@ -9,8 +9,8 @@ export const getProduct = async ({ id }: { id: string }): Promise<IProduct | nul
    return await Product.findById(id)
 }
 
-export const createProduct = async (product: IProductDoc): Promise<IProduct> => {
-   return await Product.create(product)
+export const createProduct = async (product: IProduct): Promise<IProduct> => {
+   return await new Product(product).save()
 }
 
 export const deleteProduct = async ({ id }: { id: string }): Promise<IProduct | null> => {

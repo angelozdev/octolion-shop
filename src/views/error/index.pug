@@ -6,9 +6,9 @@ body
          .container.mx-auto.py-2
             div.m-2(class="sm:mt-4 lg:max-w-lg lg:mx-auto")
                <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
-                  | Error: #{error.name}
+                  | Error: #{error.message} #{error.statusCode}
                </div>
                <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
-                  <p class="break-words text-sm">#{error.stack}</p>
+                  <p class="break-words text-sm">#{error.message}</p>
                </div>
    include ../components/footer

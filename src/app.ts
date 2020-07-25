@@ -2,19 +2,22 @@ import express, { Application, Request, Response } from 'express';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import { join } from 'path';
+
+import { notFound } from '@hapi/boom';
 import * as Sentry from '@sentry/node';
+import { clientErrorHandler, errorHandler, logErrors, wrapErrors } from './utils/middlewares/errorsHandlers'
 
 import productRoutes from './routes/views/product.routes';
 import productApiRoutes from './routes/api/product.routes';
+import userRoutes from './routes/api/user.routes'
+import passport from 'passport';
 
-import { clientErrorHandler, errorHandler, logErrors } from './utils/middlewares/errorsHandlers'
+
 
 // Init express
 const app: Application = express();
 dotenv.config()
 Sentry.init({ dsn: process.env.SENTRY_DNS })
-
-
 /*******************************************************************
 *                               Set express
 *********************************************************************/
@@ -23,10 +26,11 @@ Sentry.init({ dsn: process.env.SENTRY_DNS })
 // settings
 
 // Middlewares
-app.use(Sentry.Handlers.requestHandler())
 app.use(morgan('dev'))
+app.use(Sentry.Handlers.requestHandler())
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+app.use(passport.initialize())
 
 // Routes
 app.get('/me', (req: Request, res: Response) => {
@@ -43,11 +47,13 @@ app.get('/', (req: Request, res: Response) => {
 })
 app.use('/products', productRoutes);
 app.use('/api/products', productApiRoutes)
+app.use('/api/users', userRoutes)
 
 
 // Error Handlers
 app.use(Sentry.Handlers.errorHandler())
 app.use(logErrors)
+app.use(wrapErrors)
 app.use(clientErrorHandler)
 app.use(errorHandler)
 
@@ -68,7 +74,14 @@ app.use(express.static(join(__dirname, 'public')))
 
 // 404
 app.get('*', (req: Request, res: Response) => {
-   res.sendStatus(404)
+   const { output: { payload, statusCode }, stack } = notFound();
+   if(req.xhr || !req.accepts('html')){
+      res.status(statusCode).json(payload);
+      return;
+   } else {
+      res.status(statusCode).render('error', { error: payload })
+   }
+   console.error(stack)
 })
 
 // Export express

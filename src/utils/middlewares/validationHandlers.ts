@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { ObjectSchema } from "yup";
+import { badRequest } from '@hapi/boom';
 
 export enum reqCheck {
    body = "body",
@@ -12,7 +13,7 @@ export const validate = (schema: ObjectSchema, check: reqCheck = reqCheck["body"
          await schema.validate(req[check])
          next()
       } catch (err) {
-         next(err)
+         next(badRequest(err))
       }
    }
 )

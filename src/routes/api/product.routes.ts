@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { IProduct, IProductDoc } from '../../models/Products';
+import { IProduct } from '../../models/Products';
 import { createProductSchema, updateProductSchema, productIdSchema } from '../../utils/schemas/product';
 import { validate, reqCheck } from '../../utils/middlewares/validationHandlers';
 import {
@@ -19,9 +19,9 @@ router.get('/', async (req: Request, res: Response, next: NextFunction): Promise
       /* throw new Error('This is an error') */
       const products: Array<IProduct> = await getProducts();
       res.status(200).json({
-         status: 200,
-         error: "",
-         data: { products }
+         statusCode: 200,
+         data: { products },
+         message: "ok"
       })
    } catch (err) {
       next(err)
@@ -37,8 +37,8 @@ router.get('/:id', async (req: Request, res: Response, next: NextFunction): Prom
       if(!product) throw new Error('Product not found');
 
       res.status(200).json({
-         status: 200,
-         error: "",
+         statusCode: 200,
+         message: "ok",
          data: { product }
       })
    } catch (err) {
@@ -57,11 +57,11 @@ router.post('/', validate(createProductSchema, reqCheck["body"]), async (req: Re
          price,
          image
       }
-      const createdProduct = await createProduct(newProduct as IProductDoc);
+      const createdProduct = await createProduct(newProduct);
       res.status(201).json({
-         status: 201,
-         error: "",
-         data: { createdProduct }
+         statusCode: 201,
+         data: { createdProduct },
+         message: "Created"
       })
    } catch (err) {
       next(err)
@@ -76,8 +76,8 @@ router.put('/:id', validate(productIdSchema, reqCheck["params"]), validate(updat
 
       const updatedProduct = await updateProduct({ _id: req.params.id, name, price, image })
       res.status(200).json({
-         status: 200,
-         error: "",
+         statusCode: 200,
+         message: "ok",
          data: updatedProduct
       })
    } catch (err) {
@@ -93,8 +93,8 @@ router.delete('/:id', async (req: Request, res: Response, next: NextFunction): P
 
       const deletedProduct = await deleteProduct({ id: req.params.id })
       res.status(200).json({
-         status: 200,
-         error: "",
+         statusCode: 200,
+         message: "ok",
          data: deletedProduct
       })
    } catch (err) {
