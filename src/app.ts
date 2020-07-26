@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from 'express';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import { join } from 'path';
+import helmet from 'helmet';
 
 import { notFound } from '@hapi/boom';
 import * as Sentry from '@sentry/node';
@@ -26,6 +27,7 @@ Sentry.init({ dsn: process.env.SENTRY_DNS })
 // settings
 
 // Middlewares
+app.use(helmet())
 app.use(morgan('dev'))
 app.use(Sentry.Handlers.requestHandler())
 app.use(express.json())

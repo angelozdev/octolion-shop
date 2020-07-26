@@ -3,6 +3,7 @@ import { IProduct } from '../../models/Products';
 import { createProductSchema, updateProductSchema, productIdSchema } from '../../utils/schemas/product';
 import { validate, reqCheck } from '../../utils/middlewares/validationHandlers';
 import passport from 'passport';
+import { cacheResponse, FIVE_MINUTES, ONE_HOUR } from '..//../utils/cache/cacheResponse'
 
 /* Strategies */
 import '../../utils/auth/jwt';
@@ -14,6 +15,7 @@ import {
    deleteProduct,
    updateProduct
 } from '../../services/product.service';
+import { Error } from 'mongoose';
 
 const router: Router = Router();
 
@@ -22,39 +24,44 @@ const router: Router = Router();
 router.get(
    '/',
    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-   try {
-      /* throw new Error('This is an error') */
-      const products: Array<IProduct> = await getProducts();
-      res.status(200).json({
-         statusCode: 200,
-         data: { products },
-         message: "ok"
-      })
-   } catch (err) {
-      next(err)
+      cacheResponse(res, FIVE_MINUTES)
+      try {
+         /* throw new Error('This is an error') */
+         const products: Array<IProduct> = await getProducts();
+         res.status(200).json({
+            statusCode: 200,
+            data: { products },
+            message: "ok"
+         })
+      } catch (err) {
+         next(err)
+      }
    }
-})
+)
 
 
 /* Get only one product */
 router.get(
    '/:id',
    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-   try {
-      const product: IProduct | null = await getProduct({ id: req.params.id });
+      cacheResponse(res, ONE_HOUR)
 
-      if(!product) throw new Error('Product not found');
+      try {
+         const product: IProduct | null = await getProduct({ id: req.params.id });
 
-      res.status(200).json({
-         statusCode: 200,
-         message: "ok",
-         data: { product }
-      })
-   } catch (err) {
-      next(err)
+         if(!product) throw new Error('Product not found');
+
+         res.status(200).json({
+            statusCode: 200,
+            message: "ok",
+            data: { product }
+         })
+      } catch (err) {
+         next(err)
+      }
+
    }
-
-})
+)
 
 
 /* Create Product */
@@ -97,6 +104,8 @@ router.put(
             image
          })
 
+         if(!updatedProduct) throw new Error('Not Found')
+
          res.status(200).json({
             statusCode: 200,
             message: "ok",
@@ -118,6 +127,8 @@ router.delete(
       if(!req.params.id) throw new Error('ID is missing')
 
       const deletedProduct = await deleteProduct({ id: req.params.id })
+      if(!deletedProduct) throw new Error('Not Found')
+
       res.status(200).json({
          statusCode: 200,
          message: "ok",

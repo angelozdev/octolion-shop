@@ -4,7 +4,7 @@ import { badImplementation, isBoom, Boom } from '@hapi/boom';
 
 
 export const logErrors = (err: Error, req: Request, res: Response, next: NextFunction) => {
-   console.log(err.stack);
+   console.error(err.stack);
    next(err)
 }
 

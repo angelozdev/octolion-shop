@@ -1,11 +1,13 @@
 import { Router, Response, Request, NextFunction } from 'express';
 import { getProducts } from '../../services/product.service';
 import { IProduct } from '../../models/Products';
+import { cacheResponse, FIVE_MINUTES } from '../../utils/cache/cacheResponse';
 const router: Router = Router();
 
 
 
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
+   cacheResponse(res, FIVE_MINUTES)
    try {
       /* throw new Error('This is an error') */
       const products: Array<IProduct> = await getProducts()
