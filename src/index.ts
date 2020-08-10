@@ -1,10 +1,11 @@
 import app from './app';
-import { connect } from './db';
+import connect from './db';
+import { config } from './config';
 
-connect()
-const PORT = process.env.PORT || 6666
+connect();
+const { PORT } = config;
 
 app.listen(PORT, () => {
-   console.clear()
-   console.log(`Server listener at http://localhost:${PORT}`)
-})
+   console.clear();
+   console.log(`Server listener at http://localhost:${PORT}`);
+});

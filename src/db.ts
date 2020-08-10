@@ -1,28 +1,25 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+import { config } from './config';
 
-dotenv.config()
+const { DB_USER, DB_PASSWORD, DB_NAME } = config;
 
-const {
-   MONGODB_USER,
-   MONGODB_PASSWORD,
-   MONGODB_DATABASE
-} = process.env;
+const MONGODB_URI: string = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@typescript-node.ac5xx.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
 
-const MONGODB_URI: string = `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@typescript-node.ac5xx.mongodb.net/${MONGODB_DATABASE}?retryWrites=true&w=majority`
-let count: number = 0;
-export const connect = () => {
-   mongoose.connect(MONGODB_URI, {
-      useUnifiedTopology: true,
-      useNewUrlParser: true,
-      useFindAndModify: true,
-      useCreateIndex: true
-   })
-   .then(() => console.log('[DB] Connected'))
-   .catch(err => {
-      console.error(err)
-      setTimeout(() => {
-         connect()
-      }, 5000);
-   })
-}
+const handleError = (err: Error) => {
+   console.error(err);
+   process.exit(1);
+};
+
+const connect = () => {
+   mongoose
+      .connect(MONGODB_URI, {
+         useUnifiedTopology: true,
+         useNewUrlParser: true,
+         useFindAndModify: true,
+         useCreateIndex: true
+      })
+      .then(() => console.log('[DB] Connected'))
+      .catch(handleError);
+};
+
+export default connect;
