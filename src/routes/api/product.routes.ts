@@ -25,7 +25,6 @@ import {
    deleteProduct,
    updateProduct
 } from '../../services/product.service';
-import { Error } from 'mongoose';
 
 const router: Router = Router();
 
@@ -35,7 +34,7 @@ router.get(
    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       cacheResponse(res, FIVE_MINUTES);
       try {
-         /* throw new Error('This is an error') */
+         /* throw new Error('This is an error'); */
          const products: Array<IProduct> = await getProducts();
          res.status(200).json({
             statusCode: 200,

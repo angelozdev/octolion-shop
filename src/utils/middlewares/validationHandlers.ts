@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 import { ObjectSchema } from 'yup';
 import { badRequest } from '@hapi/boom';
 
-export type Check = 'body' | 'params';
+type Check = 'body' | 'params';
 
 export const validate = (schema: ObjectSchema, check: Check = 'body') => async (
    req: Request,

@@ -36,6 +36,7 @@ export const clientErrorHandler = (
    const {
       output: { statusCode, payload }
    } = err;
+
    if (req.xhr || !req.accepts('html')) {
       // Cuando una API es laque hace la petición devuelve un json
       res.status(statusCode).json({
@@ -53,13 +54,8 @@ export const errorHandler = (
    res: Response,
    next: NextFunction
 ) => {
-   const {
-      output: { payload, statusCode }
-   } = err;
-
    if (!config.DEV) {
       delete err.stack;
    }
-   res.status(statusCode).json(payload);
-   res.render('error', { error: err });
+   res.render('error', { error: { ...err.output.payload, stack: err.stack } });
 };

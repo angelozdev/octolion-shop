@@ -81,7 +81,9 @@ app.get('*', (req, res) => {
       res.status(statusCode).json(payload);
       return;
    } else {
-      res.status(statusCode).render('error', { error: payload });
+      res.status(statusCode).render('error', {
+         error: { ...payload, stack: notFound().stack }
+      });
    }
    console.error(stack);
 });

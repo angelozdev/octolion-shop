@@ -9,6 +9,9 @@ body
                   | Error: #{error.message} #{error.statusCode}
                </div>
                <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
-                  <p class="break-words text-sm">#{error.message}</p>
+                  if error.stack
+                     <p class="break-words text-sm">#{error.stack}</p>
+                  else
+                     p.break-words.text-sm= error.message
                </div>
    include ../components/footer

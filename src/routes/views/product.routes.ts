@@ -9,7 +9,7 @@ const router: Router = Router();
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
    cacheResponse(res, FIVE_MINUTES);
    try {
-      /* throw new Error('This is an error') */
+      /* throw new Error('This is an error'); */
       const products: Array<IProduct> = await getProducts();
       res.render('products/index', { products, title: 'Express | Products' });
    } catch (err) {

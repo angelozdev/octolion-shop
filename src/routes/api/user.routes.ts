@@ -54,13 +54,12 @@ router.post(
       session: false
    }),
    (req, res, next) => {
-      if (!req.user) return next(new Error('User not found'));
       const { username } = req.user as IUser;
 
       const token = jwt.sign({ username }, config.SECRET_JWT || '', {
          expiresIn: '15m'
       });
-      res.status(200).json({ token: token });
+      res.status(200).json({ access_token: token });
    }
 );
 

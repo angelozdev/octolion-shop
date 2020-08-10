@@ -15,7 +15,7 @@ const connect = () => {
       .connect(MONGODB_URI, {
          useUnifiedTopology: true,
          useNewUrlParser: true,
-         useFindAndModify: true,
+         useFindAndModify: false,
          useCreateIndex: true
       })
       .then(() => console.log('[DB] Connected'))

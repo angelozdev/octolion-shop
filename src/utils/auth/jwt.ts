@@ -2,6 +2,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import passport from 'passport';
 import { findUserByUsername } from '../../services/user.service';
 import { config } from '../../config';
+import { unauthorized } from '@hapi/boom';
 
 passport.use(
    'jwt',
@@ -15,7 +16,7 @@ passport.use(
             const user = await findUserByUsername({
                username: payload.username
             });
-            if (!user) return done(null, false);
+            if (!user) return done(unauthorized(), false);
 
             done(null, user);
          } catch (err) {
