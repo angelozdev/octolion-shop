@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 // eslint-disable-next-line no-unused-vars
 import { badImplementation, isBoom, Boom } from '@hapi/boom';
 import { config } from '../../config';
+import debug from 'debug';
 
 export const logErrors = (
    err: Error,
@@ -10,7 +11,7 @@ export const logErrors = (
    _res: Response,
    next: NextFunction
 ) => {
-   console.error(err.stack);
+   debug('app:error')(err.stack);
    next(err);
 };
 

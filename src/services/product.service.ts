@@ -37,3 +37,7 @@ export const updateProduct = async ({
       { new: true }
    );
 };
+
+export default {
+   getProducts
+};

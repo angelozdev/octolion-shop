@@ -13,15 +13,14 @@ import {
    cacheResponse,
    FIVE_MINUTES,
    ONE_HOUR
-} from '..//../utils/cache/cacheResponse';
+} from '../../utils/cache/cacheResponse';
 
 /* Strategies */
 import '../../utils/auth/jwt';
 
-import {
+import ProductServices, {
    createProduct,
    getProduct,
-   getProducts,
    deleteProduct,
    updateProduct
 } from '../../services/product.service';
@@ -35,7 +34,7 @@ router.get(
       cacheResponse(res, FIVE_MINUTES);
       try {
          /* throw new Error('This is an error'); */
-         const products: Array<IProduct> = await getProducts();
+         const products: Array<IProduct> = await ProductServices.getProducts();
          res.status(200).json({
             statusCode: 200,
             data: { products },
