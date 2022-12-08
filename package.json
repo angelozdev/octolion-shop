@@ -19,7 +19,7 @@
       "@hapi/boom": "^9.1.0",
       "@sentry/node": "^5.20.0",
       "bcryptjs": "^2.4.3",
-      "express": "^4.17.1",
+      "express": "^4.18.2",
       "helmet": "^3.23.3",
       "jsonwebtoken": "^8.5.1",
       "mongoose": "^5.9.25",
